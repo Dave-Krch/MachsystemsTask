@@ -16,6 +16,9 @@ namespace MachsystemsTask.Data
 
             builder.Entity<OrderItems>()
                 .HasKey(o => new { o.OrderId, o.ItemName });
+
+            builder.Entity<Customer>()
+                .HasKey(o => new { o.Id });
         }
     }
 

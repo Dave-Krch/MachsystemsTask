@@ -1,0 +1,30 @@
+﻿@page "/customers"
+
+@inject ICustomerService CustomerService
+
+<h3>Products</h3>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var customer in customers)
+        {
+            <li>@customer.Name - @customer.Age.ToString("C")</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Customer> customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CustomerService.GetCustomersAsync();
+    }
+
+    // Methods to add, update, delete products can be added here
+}

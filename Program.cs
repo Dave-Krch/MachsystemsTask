@@ -1,11 +1,15 @@
 using MachsystemsTask.Components;
 using MachsystemsTask.Components.Account;
 using MachsystemsTask.Data;
+using MachsystemsTask.Service;
+using MachsystemsTask.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
