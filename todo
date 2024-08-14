@@ -1,0 +1,11 @@
+Order page
+	Zobrazeny objednavky - u kazdy edit button
+	Filtrovani - customer name, datum
+Edit order page
+	Vypsany polozky -> u kazdy edit, remove?
+	Tlacitka -> add item, change customer, remove order
+Customer page
+	filtry -> mesto, jmeno, id, email
+	tlacitko edit
+Edit customer page
+		

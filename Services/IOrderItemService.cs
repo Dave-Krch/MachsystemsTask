@@ -5,9 +5,13 @@ namespace MachsystemsTask.Services
     public interface IOrderItemService
     {
         Task<List<OrderItems>> GetItemsForOrderAsync(int OrderId);
-        Task<OrderItems> GetOrderItem(int OrderId, string Item);
-        Task EditItemsFromOrderAsync(int OrderId, string Item, int ItemCount);
 
-        Task RemoveItemsFromOrderAsync(int OrderId, string Item, int ItemCount);
+        Task<OrderItems> GetOrderItemAsync(int OrderId, string ItemName);
+        
+        Task AddOrderItemsAsync(int OrderId, OrderItems item);
+
+        Task UpdateOrderItemsAsync(int OrderId, OrderItems item);
+
+        Task DeleteOrderItemsAsync(int OrderId, string ItemName);
     }
 }

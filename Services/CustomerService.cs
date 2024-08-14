@@ -28,15 +28,15 @@ namespace MachsystemsTask.Service
             return await _context.Customers.FindAsync(Id);
         }
 
-        public async Task UpdateCustomerAsync(int Id, string Name, string Email, int Age, string City, string Country) {
-            var customer = await _context.Customers.FindAsync(Id);
-            if (customer != null)
+        public async Task UpdateCustomerAsync(Customer customer) {
+            var DbCustomer = await _context.Customers.FindAsync(customer.Id);
+            if (DbCustomer != null)
             {
-                customer.Name = Name;
-                customer.Email = Email;
-                customer.Age = Age;
-                customer.City = City;
-                customer.Country = Country;
+                DbCustomer.Name = customer.Name;
+                DbCustomer.Email = customer.Email;
+                DbCustomer.Age = customer.Age;
+                DbCustomer.City = customer.City;
+                DbCustomer.Country = customer.Country;
 
                 await _context.SaveChangesAsync();
             }

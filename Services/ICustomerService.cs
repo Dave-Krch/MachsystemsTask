@@ -10,7 +10,7 @@ namespace MachsystemsTask.Services
 
         Task AddCustomerAsync(Customer customer);
 
-        Task UpdateCustomerAsync(int id, string Name, string Email, int Age, string City, string Country);
+        Task UpdateCustomerAsync(Customer customer);
 
         Task DeleteCustomerAsync(int id);
        
