@@ -8,6 +8,8 @@
 <MudStack Row="true">
     <MudText Typo="Typo.h4">Customers</MudText>
     <MudSpacer />
+    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     <MudIconButton Href="/customers/add" Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
 </MudStack>
 
@@ -43,16 +45,11 @@ else
 
     List<CustomerRecord>? CustomerRecords;
 
+    string? searchString = null;
+
     protected override async Task OnInitializedAsync()
     {
-        var DbCustomers = await CustomerService.GetCustomersAsync();
-
-        CustomerRecords = new List<CustomerRecord>();
-
-        foreach (Customer DbCustomer in DbCustomers)
-        {
-            CustomerRecords.Add(new CustomerRecord(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country));
-        }
+        await UpdateGridAsync();
 
     }
 
@@ -60,13 +57,43 @@ else
     {
         await CustomerService.DeleteCustomerAsync(Id);
 
+        await UpdateGridAsync();
+    }
+
+    private async Task UpdateGridAsync()
+    {
         var DbCustomers = await CustomerService.GetCustomersAsync();
 
         CustomerRecords = new List<CustomerRecord>();
 
         foreach (Customer DbCustomer in DbCustomers)
         {
-            CustomerRecords.Add(new CustomerRecord(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country));
+            if(IsFiltered(DbCustomer))
+                CustomerRecords.Add(new CustomerRecord(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country));
         }
     }
+
+    private bool IsFiltered(Customer customer)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (customer.Id.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (customer.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (customer.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (customer.Age.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (customer.City.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (customer.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task OnSearch(string text)
+    {
+        searchString = text;
+        await UpdateGridAsync();    }
 }
