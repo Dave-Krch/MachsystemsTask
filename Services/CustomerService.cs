@@ -34,10 +34,16 @@ namespace MachsystemsTask.Services
 
         public async Task UpdateCustomerAsync(Customer customer)
         {
+            Console.WriteLine("Tady 2");
+
+            Console.WriteLine(customer.Id);
+
             var DbCustomer = await _context.Customers.FindAsync(customer.Id);
 
             if (DbCustomer != null)
             {
+                Console.WriteLine("Found");
+
                 DbCustomer.Name = customer.Name;
                 DbCustomer.Email = customer.Email;
                 DbCustomer.Age = customer.Age;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MachsystemsTask.Services;
 
-public class OrderItemsService : IOrderItemService
+public class OrderItemsService : IOrderItemsService
 {
     private readonly ApplicationDbContext _context;
 

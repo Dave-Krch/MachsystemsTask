@@ -2,7 +2,7 @@
 
 namespace MachsystemsTask.Services
 {
-    public interface IOrderItemService
+    public interface IOrderItemsService
     {
         Task<List<OrderItems>> GetItemsForOrderAsync(int OrderId);
 

@@ -1,0 +1,85 @@
+﻿@page "/customers/add"
+@rendermode InteractiveServer
+
+@using System.ComponentModel.DataAnnotations
+
+@inject ICustomerService CustomerService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Customer</PageTitle>
+
+<MudStack Row="true">
+    <MudText Typo="Typo.h4">Edit Customer</MudText>
+</MudStack>
+
+@if (customer == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+
+    <EditForm Model="@customer" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudCard>
+                    <MudCardContent>
+
+                        <MudTextField @bind-Value="customer.Name" Label="Name" For="@(() => customer.Name)" />
+                        <MudTextField @bind-Value="customer.Email" Label="Email" For="@(() => customer.Email)" />
+                        <MudNumericField @bind-Value="customer.Age" Label="Age" For="@(() => customer.Age)" />
+                        <MudTextField @bind-Value="customer.City" Label="City" For="@(() => customer.City)" />
+                        <MudTextField @bind-Value="customer.Country" Label="Country" For="@(() => customer.Country)" />
+
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Add</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudPaper Class="pa-4 mud-height-full">
+                    @if (success)
+                    {
+                        <MudText Color="Color.Success">Success</MudText>
+                    }
+                    else
+                    {
+                        <MudText Color="@Color.Error">
+                            <ValidationSummary />
+                        </MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+
+@code {
+    private Customer? customer;
+
+    bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = new Customer("name", "email", 0, "city", "country");
+    }
+
+    private async void OnValidSubmit(EditContext context)
+    {
+        success = true;
+
+        Console.WriteLine(customer.Name);
+
+        await CustomerService.AddCustomerAsync(customer);
+
+        NavigationManager.NavigateTo("/customers");
+    }
+
+    private void Cancel()
+    {
+
+        NavigationManager.NavigateTo("/customers");
+    }
+}
