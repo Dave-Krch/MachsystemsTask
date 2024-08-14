@@ -1,5 +1,104 @@
-﻿<h3>EditOrder</h3>
+﻿@page "/orders/edit/{OrderId:int}"
+@rendermode InteractiveServer
+
+@using System.ComponentModel.DataAnnotations
+
+@using MachsystemsTask.Components
+
+@inject IOrderService OrderService
+@inject ICustomerService CustomerService
+@inject IOrderItemsService OrderItemsService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Order</PageTitle>
+
+<MudStack Row="true">
+    <MudText Typo="Typo.h4">Edit Order</MudText>
+    <MudSpacer />
+    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" Size="Size.Large"></MudIconButton>
+</MudStack>
+
+@if (order == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+
+    <EditForm Model="@order" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudCard>
+                    <MudCardContent>
+
+                        <MudNumericField @bind-Value="order.CustomerId" Label="CustomerId" For="@(() => order.CustomerId)" />
+
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Edit</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudPaper Class="pa-4 mud-height-full">
+                    @if (success)
+                    {
+                        <MudText Color="Color.Success">Success</MudText>
+                    }
+                    else
+                    {
+                        <MudText Color="@Color.Error">
+                            <ValidationSummary />
+                        </MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+
+    <MudStack Row="true">
+        <MudText Typo="Typo.h4">Items</MudText>
+        <MudSpacer />
+        <MudIconButton Href=@("/order/additems/" + OrderId) Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
+    </MudStack>
+}
 
 @code {
+    [Parameter] public int OrderId { get; set; }
 
+    private Order? order = new Order(DateTime.Now, 0);
+
+    //HashSet<int> CustomerIds;
+
+    bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var DbOrder = await OrderService.GetOrderByIdAsync(OrderId);
+
+        if (DbOrder != null)
+        {
+            order = new Order(DbOrder.Id, DbOrder.Created, DbOrder.CustomerId, DbOrder.Customer);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/orders");
+        }
+    }
+
+    private async void OnValidSubmit(EditContext context)
+    {
+        success = true;
+
+        Console.WriteLine("tes 10");
+
+        await OrderService.UpdateOrderAsync(order);
+
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/orders");
+    }
 }

@@ -3,7 +3,6 @@
 
 @using System.ComponentModel.DataAnnotations
 
-
 @inject IOrderService OrderService
 @inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
@@ -13,7 +12,7 @@
 <MudStack Row="true">
     <MudText Typo="Typo.h4">Add Order</MudText>
     <MudSpacer />
-    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Large"></MudIconButton>
+    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.ArrowBack" aria-label="ArrowBack" Size="Size.Large"></MudIconButton>
 </MudStack>
 
 @if (order == null)

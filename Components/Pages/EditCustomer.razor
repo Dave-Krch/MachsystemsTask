@@ -11,7 +11,7 @@
 <MudStack Row="true">
     <MudText Typo="Typo.h4">Edit Customer</MudText>
     <MudSpacer/>
-    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Large"></MudIconButton>
+    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" Size="Size.Large"></MudIconButton>
 </MudStack>
 
 @if (customer == null)
@@ -84,11 +84,8 @@ else
     {
         success = true;
 
-        Console.WriteLine(customer.Name);
-
         await CustomerService.UpdateCustomerAsync(customer);
 
-        NavigationManager.NavigateTo("/customers");
     }
 
     private void Cancel()
