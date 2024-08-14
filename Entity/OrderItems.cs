@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MachsystemsTask.Data
+namespace MachsystemsTask.Entity
 {
     public class OrderItems
     {
@@ -8,6 +8,6 @@ namespace MachsystemsTask.Data
         public Order Order { get; set; }
 
         public string ItemName { get; set; }
-        public int ItemCount{ get; set; }
+        public int ItemCount { get; set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿namespace MachsystemsTask.Data
+﻿namespace MachsystemsTask.Entity
 {
     public class Customer
     {
-        public Customer(string Name, string Email, int Age, string City, string Country) {
+        public Customer(string Name, string Email, int Age, string City, string Country)
+        {
             this.Name = Name;
             this.Email = Email;
             this.Age = Age;

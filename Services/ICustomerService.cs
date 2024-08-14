@@ -1,4 +1,4 @@
-﻿using MachsystemsTask.Data;
+﻿using MachsystemsTask.Entity;
 
 namespace MachsystemsTask.Services
 {

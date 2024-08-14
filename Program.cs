@@ -1,8 +1,8 @@
 using MachsystemsTask.Components;
 using MachsystemsTask.Components.Account;
 using MachsystemsTask.Data;
-using MachsystemsTask.Service;
 using MachsystemsTask.Services;
+using MachsystemsTask.Entity;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

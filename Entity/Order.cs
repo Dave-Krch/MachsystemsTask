@@ -1,4 +1,4 @@
-﻿namespace MachsystemsTask.Data
+﻿namespace MachsystemsTask.Entity
 {
     public class Order
     {

@@ -1,25 +1,29 @@
 ﻿using MachsystemsTask.Data;
-using MachsystemsTask.Services;
+using MachsystemsTask.Entity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MachsystemsTask.Service
+namespace MachsystemsTask.Services
 {
     public class CustomerService : ICustomerService
     {
         private readonly ApplicationDbContext _context;
 
-        public CustomerService(ApplicationDbContext context) {
+        public CustomerService(ApplicationDbContext context)
+        {
             _context = context;
         }
 
-        public async Task<List<Customer>> GetCustomersAsync() {
+        public async Task<List<Customer>> GetCustomersAsync()
+        {
             return await _context.Customers.ToListAsync();
         }
 
-        public async Task AddCustomerAsync(Customer customer) {
+        public async Task AddCustomerAsync(Customer customer)
+        {
             _context.Customers.Add(customer);
+
             await _context.SaveChangesAsync();
         }
 
@@ -28,8 +32,10 @@ namespace MachsystemsTask.Service
             return await _context.Customers.FindAsync(Id);
         }
 
-        public async Task UpdateCustomerAsync(Customer customer) {
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
             var DbCustomer = await _context.Customers.FindAsync(customer.Id);
+
             if (DbCustomer != null)
             {
                 DbCustomer.Name = customer.Name;
@@ -42,10 +48,14 @@ namespace MachsystemsTask.Service
             }
         }
 
-        public async Task DeleteCustomerAsync(int Id) {
+        public async Task DeleteCustomerAsync(int Id)
+        {
             var customer = await _context.Customers.FindAsync(Id);
-            if (customer != null) {
-                _context.Remove(customer);
+
+            if (customer != null)
+            {
+                _context.Customers.Remove(customer);
+
                 await _context.SaveChangesAsync();
             }
         }   
