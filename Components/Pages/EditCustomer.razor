@@ -10,6 +10,8 @@
 
 <MudStack Row="true">
     <MudText Typo="Typo.h4">Edit Customer</MudText>
+    <MudSpacer/>
+    <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Large"></MudIconButton>
 </MudStack>
 
 @if (customer == null)
@@ -90,8 +92,7 @@ else
     }
 
     private void Cancel()
-    {
-        
+    {      
         NavigationManager.NavigateTo("/customers");
     }
 }

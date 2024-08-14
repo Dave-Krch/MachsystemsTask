@@ -1,38 +1,36 @@
-﻿@page "/customers/add"
+﻿@page "/orders/add"
 @rendermode InteractiveServer
 
 @using System.ComponentModel.DataAnnotations
 
+
+@inject IOrderService OrderService
 @inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Add Customer</PageTitle>
+<PageTitle>Add Order</PageTitle>
 
 <MudStack Row="true">
-    <MudText Typo="Typo.h4">Edit Customer</MudText>
-    <MudSpacer/>
+    <MudText Typo="Typo.h4">Add Order</MudText>
+    <MudSpacer />
     <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Large"></MudIconButton>
 </MudStack>
 
-@if (customer == null)
+@if (order == null)
 {
     <MudProgressCircular Indeterminate="true" />
 }
 else
 {
 
-    <EditForm Model="@customer" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="@order" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12" sm="7">
                 <MudCard>
                     <MudCardContent>
 
-                        <MudTextField @bind-Value="customer.Name" Label="Name" For="@(() => customer.Name)" />
-                        <MudTextField @bind-Value="customer.Email" Label="Email" For="@(() => customer.Email)" />
-                        <MudNumericField @bind-Value="customer.Age" Label="Age" For="@(() => customer.Age)" />
-                        <MudTextField @bind-Value="customer.City" Label="City" For="@(() => customer.City)" />
-                        <MudTextField @bind-Value="customer.Country" Label="Country" For="@(() => customer.Country)" />
+                        <MudNumericField @bind-Value="order.CustomerId" Label="CustomerId" For="@(() => order.CustomerId)" />
 
                     </MudCardContent>
                     <MudCardActions>
@@ -59,27 +57,39 @@ else
 }
 
 @code {
-    private Customer? customer;
+    private Order? order = new Order(DateTime.Now, 0);
+
+    HashSet<int> CustomerIds;
 
     bool success;
 
     protected override async Task OnInitializedAsync()
     {
-        customer = new Customer("name", "email", 0, "city", "country");
+        var DbCustomers = await CustomerService.GetCustomersAsync();
+
+        CustomerIds = new HashSet<int>();
+
+        foreach (Customer DbCustomer in DbCustomers)
+        {
+            CustomerIds.Add(DbCustomer.Id);
+        }
+
     }
 
     private async void OnValidSubmit(EditContext context)
     {
         success = true;
 
-        await CustomerService.AddCustomerAsync(customer);
+        Console.WriteLine("tes 10");
 
-        NavigationManager.NavigateTo("/customers");
+        await OrderService.AddOrderAsync(order);
+
+        NavigationManager.NavigateTo("/orders");
     }
 
     private void Cancel()
     {
 
-        NavigationManager.NavigateTo("/customers");
+        NavigationManager.NavigateTo("/orders");
     }
 }

@@ -1,0 +1,91 @@
+﻿@page "/orders"
+
+@rendermode InteractiveServer
+
+@inject IOrderService OrderService
+@inject NavigationManager NavManager
+
+<MudStack Row="true">
+    <MudText Typo="Typo.h4">Orders</MudText>
+    <MudSpacer />
+    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    <MudIconButton Href="/orders/add" Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
+</MudStack>
+
+
+@if (OrderRecords == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudDataGrid Items="@OrderRecords" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+        <Columns>
+            <PropertyColumn Property="x => x.Id" />
+            <PropertyColumn Property="x => x.Created" />
+            <PropertyColumn Property="x => x.CustomerId" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudIconButton @onclick="() => DeleteOrderAsync(context.Item.Id)" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        <MudIconButton Href=@("orders/edit/" + context.Item.Id) Icon="@Icons.Material.Filled.Edit" aria-label="edit"></MudIconButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+}
+
+@code {
+    public record OrderRecord(int Id, DateTime Created, int CustomerId);
+
+    List<OrderRecord>? OrderRecords;
+
+    string? searchString = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateGridAsync();
+
+    }
+
+    private async Task DeleteOrderAsync(int Id)
+    {
+        await OrderService.DeleteOrderAsync(Id);
+
+        await UpdateGridAsync();
+    }
+
+    private async Task UpdateGridAsync()
+    {
+        var DbOrders = await OrderService.GetOrdersAsync();
+
+        OrderRecords = new List<OrderRecord>();
+
+        foreach (Order DbOrder in DbOrders)
+        {
+            if (IsFiltered(DbOrder))
+                OrderRecords.Add(new OrderRecord(DbOrder.Id, DbOrder.Created, DbOrder.CustomerId));
+        }
+    }
+
+    private bool IsFiltered(Order order)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (order.Id.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (order.CustomerId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (order.Created.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task OnSearch(string text)
+    {
+        searchString = text;
+        await UpdateGridAsync();
+    }
+}
