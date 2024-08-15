@@ -14,6 +14,7 @@ namespace MachsystemsTask.Services
 
         Task DeleteCustomerAsync(int id);
        
+        Task<bool> CustomerExists(int id);
     }
 }
         

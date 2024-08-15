@@ -44,13 +44,17 @@ else
                 <MudPaper Class="pa-4 mud-height-full">
                     @if (success)
                     {
-                        <MudText Color="Color.Success">Success</MudText>
+                        <MudText Color="Color.Success">Order edited</MudText>
                     }
                     else
                     {
                         <MudText Color="@Color.Error">
                             <ValidationSummary />
                         </MudText>
+                        @if (!customerExists)
+                        {
+                            <MudText Color="Color.Error">Customer with given id doesnt exist</MudText>
+                        }
                     }
                 </MudPaper>
             </MudItem>
@@ -58,7 +62,7 @@ else
     </EditForm>
 
     <MudStack Row="true">
-        <MudText Typo="Typo.h4">Order Items</MudText>
+        <MudText Typo="Typo.h4">Add Order Items</MudText>
         <MudSpacer />
         <MudIconButton Href=@("orders/" + OrderId.ToString() + "/additem") Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
     </MudStack>
@@ -93,6 +97,7 @@ else
     private Order order = new Order(DateTime.Now, 0);
 
     bool success;
+    bool customerExists = true;
 
     public record ItemRecord(string Name, int Count);
 
@@ -124,10 +129,21 @@ else
 
     private async void OnValidSubmit(EditContext context)
     {
+        success = false;
+
+        customerExists = await CustomerService.CustomerExists(order.CustomerId);
+
+        if (!customerExists)
+        {
+            StateHasChanged();
+            return;
+        }
+
         success = true;
 
         await OrderService.UpdateOrderAsync(order);
 
+        StateHasChanged();
     }
 
     private void Cancel()

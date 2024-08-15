@@ -22,7 +22,7 @@
 else
 {
 
-    <EditForm Model="@order" OnValidSubmit="OnValidSubmit">
+    <EditForm @ref="form" Model="@order" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12" sm="7">
@@ -41,14 +41,20 @@ else
                 <MudPaper Class="pa-4 mud-height-full">
                     @if (success)
                     {
-                        <MudText Color="Color.Success">Success</MudText>
+                        <MudText Color="Color.Success">Order added</MudText>
                     }
                     else
                     {
                         <MudText Color="@Color.Error">
                             <ValidationSummary />
                         </MudText>
+                        @if (!customerExists)
+                        {
+                            <MudText Color="Color.Error">Customer with given id doesnt exist</MudText>
+                        }
                     }
+
+
                 </MudPaper>
             </MudItem>
         </MudGrid>
@@ -56,11 +62,14 @@ else
 }
 
 @code {
-    private Order? order = new Order(DateTime.Now, 0);
+    private EditForm? form;
 
-    HashSet<int> CustomerIds;
+    private Order order = new Order(DateTime.Now, 0);
+
+    HashSet<int>? CustomerIds;
 
     bool success;
+    bool customerExists = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,13 +86,21 @@ else
 
     private async void OnValidSubmit(EditContext context)
     {
-        success = true;
+        success = false;
 
-        Console.WriteLine("tes 10");
+        customerExists = await CustomerService.CustomerExists(order.CustomerId);
+
+        if (!customerExists)
+        {
+            StateHasChanged();
+            return;
+        }
+
+        success = true;
 
         await OrderService.AddOrderAsync(order);
 
-        NavigationManager.NavigateTo("/orders");
+        StateHasChanged();
     }
 
     private void Cancel()

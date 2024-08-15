@@ -15,25 +15,25 @@
     <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" Size="Size.Large"></MudIconButton>
 </MudStack>
 
-@if (Item == null)
+@if (Customer == null)
 {
     <MudProgressCircular Indeterminate="true" />
 }
 else
 {
 
-    <EditForm Model="@Item" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="@Customer" OnValidSubmit="OnValidSubmit" OnInvalidSubmit="OnInvalidSubmit">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12" sm="7">
                 <MudCard>
                     <MudCardContent>
 
-                        <MudTextField @bind-Value="Item.Name" Label="Name" For="@(() => Item.Name)" />
-                        <MudTextField @bind-Value="Item.Email" Label="Email" For="@(() => Item.Email)" />
-                        <MudNumericField @bind-Value="Item.Age" Label="Age" For="@(() => Item.Age)" />
-                        <MudTextField @bind-Value="Item.City" Label="City" For="@(() => Item.City)" />
-                        <MudTextField @bind-Value="Item.Country" Label="Country" For="@(() => Item.Country)" />
+                        <MudTextField @bind-Value="Customer.Name" Label="Name" For="@(() => Customer.Name)" />
+                        <MudTextField @bind-Value="Customer.Email" Label="Email" For="@(() => Customer.Email)" />
+                        <MudNumericField @bind-Value="Customer.Age" Label="Age" For="@(() => Customer.Age)" />
+                        <MudTextField @bind-Value="Customer.City" Label="City" For="@(() => Customer.City)" />
+                        <MudTextField @bind-Value="Customer.Country" Label="Country" For="@(() => Customer.Country)" />
 
                     </MudCardContent>
                     <MudCardActions>
@@ -45,7 +45,7 @@ else
                 <MudPaper Class="pa-4 mud-height-full">
                     @if (success)
                     {
-                        <MudText Color="Color.Success">Success @Item.Name</MudText>
+                        <MudText Color="Color.Success">Customer edited</MudText>
                     }
                     else
                     {
@@ -62,7 +62,7 @@ else
 @code {
     [Parameter] public int id { get; set; }
 
-    private Customer? Item;
+    private Customer? Customer;
 
     bool success;
 
@@ -73,7 +73,7 @@ else
 
         if (DbCustomer != null)
         {
-            Item = new Customer(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country);
+            Customer = new Customer(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country);
         }
         else
         {
@@ -81,11 +81,16 @@ else
         }
     }
 
+    private void OnInvalidSubmit(EditContext context)
+    {
+        success = false;
+    }
+
     private async void OnValidSubmit(EditContext context)
     {
         success = true;
 
-        await CustomerService.UpdateCustomerAsync(Item);
+        await CustomerService.UpdateCustomerAsync(Customer);
 
     }
 

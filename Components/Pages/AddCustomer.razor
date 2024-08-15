@@ -21,7 +21,7 @@
 else
 {
 
-    <EditForm Model="@customer" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="@customer" OnValidSubmit="OnValidSubmit" OnInvalidSubmit="OnInvalidSubmit">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12" sm="7">
@@ -44,7 +44,7 @@ else
                 <MudPaper Class="pa-4 mud-height-full">
                     @if (success)
                     {
-                        <MudText Color="Color.Success">Success</MudText>
+                        <MudText Color="Color.Success">Customer Added</MudText>
                     }
                     else
                     {
@@ -63,20 +63,18 @@ else
 
     bool success;
 
-    /*
-    protected override async Task OnInitializedAsync()
-    {
-        customer = new Customer("name", "email", 0, "city", "country");
-    }
-    */
-
     private async void OnValidSubmit(EditContext context)
     {
         success = true;
 
         await CustomerService.AddCustomerAsync(customer);
 
-        NavigationManager.NavigateTo("/customers");
+        //NavigationManager.NavigateTo("/customers");
+    }
+
+    private void OnInvalidSubmit(EditContext context)
+    {
+        success = false;
     }
 
     private void Cancel()

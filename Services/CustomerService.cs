@@ -64,7 +64,16 @@ namespace MachsystemsTask.Services
 
                 await _context.SaveChangesAsync();
             }
-        }   
-  
+        }
+
+        public async Task<bool> CustomerExists(int id)
+        {
+            var DbCustomer = await _context.Customers.FindAsync(id);
+            if (DbCustomer != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
