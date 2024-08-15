@@ -100,7 +100,7 @@ else
 
         await OrderService.AddOrderAsync(order);
 
-        StateHasChanged();
+        NavigationManager.NavigateTo("/orders");
     }
 
     private void Cancel()

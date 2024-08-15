@@ -92,6 +92,8 @@ else
 
         await CustomerService.UpdateCustomerAsync(Customer);
 
+        NavigationManager.NavigateTo("/customers");
+
     }
 
     private void Cancel()
