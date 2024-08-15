@@ -1,17 +1,16 @@
-﻿@page "/customers/edit/{id:int}"
+﻿@page "/orders/{OrderId:int}/additem"
 
 @rendermode InteractiveServer
 
-@using System.ComponentModel.DataAnnotations
-
-@inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit Customer</PageTitle>
+@inject IOrderItemsService OrderItemsService
+
+<PageTitle>Add Item</PageTitle>
 
 <MudStack Row="true">
-    <MudText Typo="Typo.h4">Edit Customer</MudText>
-    <MudSpacer/>
+    <MudText Typo="Typo.h4">Add Item</MudText>
+    <MudSpacer />
     <MudIconButton @onclick="() => Cancel()" Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" Size="Size.Large"></MudIconButton>
 </MudStack>
 
@@ -29,11 +28,8 @@ else
                 <MudCard>
                     <MudCardContent>
 
-                        <MudTextField @bind-Value="Item.Name" Label="Name" For="@(() => Item.Name)" />
-                        <MudTextField @bind-Value="Item.Email" Label="Email" For="@(() => Item.Email)" />
-                        <MudNumericField @bind-Value="Item.Age" Label="Age" For="@(() => Item.Age)" />
-                        <MudTextField @bind-Value="Item.City" Label="City" For="@(() => Item.City)" />
-                        <MudTextField @bind-Value="Item.Country" Label="Country" For="@(() => Item.Country)" />
+                        <MudTextField @bind-Value="Item.ItemName" Label="Item Name" For="@(() => Item.ItemName)" />
+                        <MudNumericField @bind-Value="Item.ItemCount" Label="Count" For="@(() => Item.ItemCount)" />
 
                     </MudCardContent>
                     <MudCardActions>
@@ -45,7 +41,7 @@ else
                 <MudPaper Class="pa-4 mud-height-full">
                     @if (success)
                     {
-                        <MudText Color="Color.Success">Success @Item.Name</MudText>
+                        <MudText Color="Color.Success">Success</MudText>
                     }
                     else
                     {
@@ -60,37 +56,31 @@ else
 }
 
 @code {
-    [Parameter] public int id { get; set; }
+    [Parameter]
+    public int OrderId { get; set; }
 
-    private Customer? Item;
+    private OrderItems? Item;
 
     bool success;
 
-
     protected override async Task OnInitializedAsync()
     {
-        var DbCustomer = await CustomerService.GetCustomerByIdAsync(id);
-
-        if (DbCustomer != null)
-        {
-            Item = new Customer(DbCustomer.Id, DbCustomer.Name, DbCustomer.Email, DbCustomer.Age, DbCustomer.City, DbCustomer.Country);
-        }
-        else
-        {
-            NavigationManager.NavigateTo("/customers");
-        }
+        Item = new OrderItems(OrderId, "Item Name", 0);
     }
 
     private async void OnValidSubmit(EditContext context)
     {
         success = true;
 
-        await CustomerService.UpdateCustomerAsync(Item);
+        if (Item != null)
+        {
+            await OrderItemsService.AddOrderItemsAsync(OrderId, Item.ItemName, Item.ItemCount);
+        }
 
     }
 
     private void Cancel()
-    {      
-        NavigationManager.NavigateTo("/customers");
+    {
+        NavigationManager.NavigateTo("/orders/" + OrderId.ToString());
     }
 }

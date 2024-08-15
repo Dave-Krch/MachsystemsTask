@@ -1,4 +1,5 @@
 ﻿@page "/orders"
+@page "/"
 
 @rendermode InteractiveServer
 
@@ -29,7 +30,7 @@ else
                 <CellTemplate>
                     <MudStack Row>
                         <MudIconButton @onclick="() => DeleteOrderAsync(context.Item.Id)" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
-                        <MudIconButton Href=@("orders/edit/" + context.Item.Id) Icon="@Icons.Material.Filled.Edit" aria-label="edit"></MudIconButton>
+                        <MudIconButton Href=@("orders/" + context.Item.Id) Icon="@Icons.Material.Filled.Edit" aria-label="edit"></MudIconButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>

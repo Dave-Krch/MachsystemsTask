@@ -19,6 +19,11 @@ public class OrderItemsService : IOrderItemsService
         return await _context.OrderItems.Where(oi => oi.OrderId == OrderId).ToListAsync();
     }
 
+    public async Task<OrderItems?> GetOrderItemsAsync(int OrderId, string ItemName)
+    {
+        return await _context.OrderItems.FindAsync(OrderId, ItemName);
+    }
+
     public async Task AddOrderItemsAsync(int OrderId, string ItemName, int Count)
     {
         var DbItem = await _context.OrderItems.FindAsync(OrderId, ItemName);

@@ -1,4 +1,4 @@
-﻿@page "/orders/edit/{OrderId:int}"
+﻿@page "/orders/{OrderId:int}"
 @rendermode InteractiveServer
 
 @using System.ComponentModel.DataAnnotations
@@ -57,8 +57,34 @@ else
         </MudGrid>
     </EditForm>
 
-    <OrderItemsComponent Id=@(OrderId)></OrderItemsComponent>
+    <MudStack Row="true">
+        <MudText Typo="Typo.h4">Order Items</MudText>
+        <MudSpacer />
+        <MudIconButton Href=@("orders/" + OrderId.ToString() + "/additem") Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
+    </MudStack>
 
+    @if (ItemRecords == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <MudDataGrid Items="@ItemRecords" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+            <Columns>
+                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Property="x => x.Count" />
+                <TemplateColumn CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudStack Row>
+                            <MudIconButton @onclick="() => AddToOrderItemsAsync(context.Item.Name)" Icon="@Icons.Material.Filled.Add" aria-label="delete"></MudIconButton>
+                            <MudIconButton @onclick="() => SubstractFromOrderItemsAsync(context.Item.Name)" Icon="@Icons.Material.Filled.Remove" aria-label="delete"></MudIconButton>
+                            <MudIconButton @onclick="() => DeleteOrderItemsAsync(context.Item.Name)" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+    }
 }
 
 @code {
@@ -68,7 +94,16 @@ else
 
     bool success;
 
+    public record ItemRecord(string Name, int Count);
+
+    List<ItemRecord>? ItemRecords;
+
     protected override async Task OnInitializedAsync()
+    {
+        await UpdateGridAsync();
+    }
+
+    private async Task UpdateGridAsync()
     {
         var DbOrder = await OrderService.GetOrderByIdAsync(OrderId);
 
@@ -76,17 +111,20 @@ else
         {
             order = new Order(DbOrder.Id, DbOrder.Created, DbOrder.CustomerId, DbOrder.Customer);
         }
-        else
+
+        var DbOrderItems = await OrderItemsService.GetItemsForOrderAsync(OrderId);
+
+        ItemRecords = new List<ItemRecord>();
+
+        foreach (OrderItems DbItem in DbOrderItems)
         {
-            NavigationManager.NavigateTo("/orders");
+            ItemRecords.Add(new ItemRecord(DbItem.ItemName, DbItem.ItemCount));
         }
     }
 
     private async void OnValidSubmit(EditContext context)
     {
         success = true;
-
-        Console.WriteLine("tes 10");
 
         await OrderService.UpdateOrderAsync(order);
 
@@ -95,5 +133,26 @@ else
     private void Cancel()
     {
         NavigationManager.NavigateTo("/orders");
+    }
+
+    private async Task DeleteOrderItemsAsync(string Name)
+    {
+        await OrderItemsService.DeleteOrderItemsAsync(OrderId, Name);
+
+        await UpdateGridAsync();
+    }
+
+    private async Task AddToOrderItemsAsync(string Name)
+    {
+        await OrderItemsService.AddOrderItemsAsync(OrderId, Name, 1);
+
+        await UpdateGridAsync();
+    }
+
+    private async Task SubstractFromOrderItemsAsync(string Name)
+    {
+        await OrderItemsService.AddOrderItemsAsync(OrderId, Name, -1);
+
+        await UpdateGridAsync();
     }
 }

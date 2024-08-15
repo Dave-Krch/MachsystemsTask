@@ -21,7 +21,7 @@ namespace MachsystemsTask.Entity
 
         [Required]
         public int OrderId { get; set; }
-        [Required]
+        
         public Order Order { get; set; }
 
         [Required]
