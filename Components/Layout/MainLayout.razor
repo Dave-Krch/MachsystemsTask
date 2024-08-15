@@ -2,6 +2,8 @@
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+@inject NavigationManager NavigationManager
+
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -38,12 +40,17 @@
 
 </MudLayout>
 @code {
-    private bool IsUserLoggedIn;
+
+    private bool IsUserLoggedIn = false;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-        IsUserLoggedIn = authState.User.Identity.IsAuthenticated;
+        if (authState.User.Identity == null)
+            IsUserLoggedIn = false;
+        else
+            IsUserLoggedIn = authState.User.Identity.IsAuthenticated;
     }
+
 }

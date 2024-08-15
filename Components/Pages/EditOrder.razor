@@ -57,19 +57,14 @@ else
         </MudGrid>
     </EditForm>
 
-    <MudStack Row="true">
-        <MudText Typo="Typo.h4">Items</MudText>
-        <MudSpacer />
-        <MudIconButton Href=@("/order/additems/" + OrderId) Icon="@Icons.Material.Filled.AddCircle" aria-label="add" Size="Size.Large"></MudIconButton>
-    </MudStack>
+    <OrderItemsComponent Id=@(OrderId)></OrderItemsComponent>
+
 }
 
 @code {
     [Parameter] public int OrderId { get; set; }
 
-    private Order? order = new Order(DateTime.Now, 0);
-
-    //HashSet<int> CustomerIds;
+    private Order order = new Order(DateTime.Now, 0);
 
     bool success;
 

@@ -6,11 +6,7 @@ namespace MachsystemsTask.Services
     {
         Task<List<OrderItems>> GetItemsForOrderAsync(int OrderId);
 
-        Task<OrderItems> GetOrderItemAsync(int OrderId, string ItemName);
-        
-        Task AddOrderItemsAsync(int OrderId, OrderItems item);
-
-        Task UpdateOrderItemsAsync(int OrderId, OrderItems item);
+        Task AddOrderItemsAsync(int OrderId, string ItemName, int Count);
 
         Task DeleteOrderItemsAsync(int OrderId, string ItemName);
     }

@@ -59,14 +59,16 @@ else
 }
 
 @code {
-    private Customer? customer;
+    private Customer customer = new Customer("name", "email", 0, "city", "country");
 
     bool success;
 
+    /*
     protected override async Task OnInitializedAsync()
     {
         customer = new Customer("name", "email", 0, "city", "country");
     }
+    */
 
     private async void OnValidSubmit(EditContext context)
     {
