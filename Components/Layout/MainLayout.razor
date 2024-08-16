@@ -4,6 +4,8 @@
 
 @inject NavigationManager NavigationManager
 
+@inject IJSRuntime JSRuntime
+
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -53,4 +55,12 @@
             IsUserLoggedIn = authState.User.Identity.IsAuthenticated;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ensure MudBlazor JS is initialized after the initial render.
+            await JSRuntime.InvokeVoidAsync("mudBlazorInit");
+        }
+    }
 }
