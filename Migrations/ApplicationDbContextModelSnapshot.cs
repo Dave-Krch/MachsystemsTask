@@ -4,7 +4,6 @@ using MachsystemsTask.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,15 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MachsystemsTask.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240813155130_Initial-AddTables")]
-    partial class InitialAddTables
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -90,7 +87,7 @@ namespace MachsystemsTask.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MachsystemsTask.Data.Customer", b =>
+            modelBuilder.Entity("MachsystemsTask.Entity.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +119,7 @@ namespace MachsystemsTask.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("MachsystemsTask.Data.Order", b =>
+            modelBuilder.Entity("MachsystemsTask.Entity.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -143,7 +140,7 @@ namespace MachsystemsTask.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("MachsystemsTask.Data.OrderItems", b =>
+            modelBuilder.Entity("MachsystemsTask.Entity.OrderItems", b =>
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -292,9 +289,9 @@ namespace MachsystemsTask.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MachsystemsTask.Data.Order", b =>
+            modelBuilder.Entity("MachsystemsTask.Entity.Order", b =>
                 {
-                    b.HasOne("MachsystemsTask.Data.Customer", "Customer")
+                    b.HasOne("MachsystemsTask.Entity.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -303,9 +300,9 @@ namespace MachsystemsTask.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("MachsystemsTask.Data.OrderItems", b =>
+            modelBuilder.Entity("MachsystemsTask.Entity.OrderItems", b =>
                 {
-                    b.HasOne("MachsystemsTask.Data.Order", "Order")
+                    b.HasOne("MachsystemsTask.Entity.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
